@@ -15,6 +15,7 @@
             var canvas;
             var shaderProgram;
             var vertexBuffer;
+            var colorBuffer;
 
             function createGLContext(canvas){
                 var names = ["webgl", "experimental-webgl"];
@@ -60,17 +61,23 @@
             }
 
             function setupShaders(){
-                var vertexShaderSource =
-                "attribute vec3 aVertexPosition;            \n" +
-                "void main(){                               \n" +
-                " gl_Position = vec4(aVertexPosition, 1.0); \n" +
-                "}                                          \n";
+                // Implementasi Vertex Shader
+                var vertexShaderSource = `
+                attribute vec3 aVertexPosition;
+                attribute vec4 aVertexColor;
+                varying lowp vec4 vColor;
+                void main(){
+                    gl_Position = vec4(aVertexPosition, 1.0);
+                    vColor = aVertexColor;
+                }`;
 
-                var fragmentShaderSource =
-                "precision mediump float;                   \n" +
-                "void main(){                               \n" +
-                "   gl_FragColor = vec4(1.0, 1.0, .0, 1.0);\n" + // Warna Segitiga
-                "}";
+                // Implementasi Vertex Color
+                var fragmentShaderSource = `
+                precision mediump float;
+                varying lowp vec4 vColor;
+                void main(){
+                    gl_FragColor = vColor;
+                }`;
 
                 var vertexShader = loadShader(gl.VERTEX_SHADER, vertexShaderSource);
                 var fragmentShader = loadShader(gl.FRAGMENT_SHADER, fragmentShaderSource);
@@ -88,42 +95,68 @@
 
                 shaderProgram.vertexPositionAttribute =
                     gl.getAttribLocation(shaderProgram, "aVertexPosition");
+                shaderProgram.vertexColorAttribute =
+                    gl.getAttribLocation(shaderProgram, "aVertexColor");
             }
 
             function setupBuffers(){
-                vertexBuffer = gl.createBuffer();
-                gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+                // Membuat array untuk masing-masing vertex
                 var triangleVertices = [
                     0.0, 0.5, 0.0, // Segitiga 1
                     -0.5, -0.5, 0.0,
                     0.5, -0.5, 0.0,
-                    0.0, 0.5, 0.0, // Segitiga 2
-                    0.5, -0.5, 0.0,
-                    1.0, 0.5, 0.0
+                    0.5, -0.5, 0.0, // Segitiga 2
+                    1.0, 0.5, 0.0,
+                    0.0, 0.5, 0.0
                 ];
 
-                gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(triangleVertices),
-                                gl.STATIC_DRAW);
+                // Membuat array untuk pengisian warna (R, G, B, A)
+                var colors = [
+                    1.0,  0.0,  0.0,  1.0,    // red 1
+                    0.0,  1.0,  0.0,  1.0,    // green 1
+                    0.0,  0.0,  1.0,  1.0,    // blue 1
+                    0.0,  0.0,  1.0,  1.0,    // blue 2
+                    0.0,  1.0,  0.0,  1.0,    // green 2
+                    1.0,  0.0,  0.0,  1.0,    // red 2
+                ];
 
-                vertexBuffer.itemSize = 3;
-                vertexBuffer.numberOfItems = 6;
+                // Buffer untuk vertex
+                vertexBuffer = gl.createBuffer();
+                gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+                gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(triangleVertices), gl.STATIC_DRAW);
+                vertexBuffer.itemSize = 3; // Jumlah elemen per atribut
+                vertexBuffer.numberOfItems = 6; // Jumlah vertex
+
+                // Buffer untuk color
+                colorBuffer = gl.createBuffer();
+                gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+                gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
+                colorBuffer.itemSize = 4; // Jumlah elemen per atribut
+                colorBuffer.numberOfItems = 6; // Jumlah warna
             }
 
             function draw(){
+                gl.clearColor(0.75, 0.85, 0.8, 1.0); // Pewarnaan Canvas/Background
+
                 gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
                 gl.clear(gl.COLOR_BUFFER_BIT);
-                gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute,
-                                    vertexBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+                gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+                gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, vertexBuffer.itemSize, gl.FLOAT, false, 0, 0);
                 gl.enableVertexAttribArray(shaderProgram.vertexPositionAttribute);
+
+                gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+                gl.vertexAttribPointer(shaderProgram.vertexColorAttribute, colorBuffer.itemSize, gl.FLOAT, false, 0, 0);
+                gl.enableVertexAttribArray(shaderProgram.vertexColorAttribute);
+
                 gl.drawArrays(gl.TRIANGLES, 0, vertexBuffer.numberOfItems);
             }
 
             function startup(){
-                canvas = document.getElementById("myGLCanvas");
-                gl = createGLContext(canvas);
+                canvas = document.getElementById("myGLCanvas"); // Membuat canvas
+                gl = createGLContext(canvas); // Membuat GLContext
                 setupShaders();
                 setupBuffers();
-                gl.clearColor(0.0, 0.75, .75, 1.0); // Pewarnaan Canvas/Background
                 draw();
             }
 
