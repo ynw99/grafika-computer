@@ -4,6 +4,30 @@
         <title>Tugas Demo Solar System</title>
     </head>
 
+    <script id="vs-src" type="x-shader/x-vertex">
+        attribute vec3 aVertexPosition; // Posisi
+        attribute vec4 aVertexColor; // Warna
+        uniform mat4 uMVMatrix; // Model view matrix
+        uniform vec4 translation; // Translasi
+
+        varying vec4 vColor; // Variabel yang akan disambungkan ke fragment shader
+        
+        void main(void) {
+            gl_Position = uMVMatrix * vec4(aVertexPosition, 1.0) + translation;
+            vColor = aVertexColor;
+        }
+    </script>
+
+    <script id="fs-src" type="x-shader/x-fragment">
+        precision mediump float;
+        
+        varying vec4 vColor;
+        
+        void main(void) {
+            gl_FragColor = vColor;
+        }
+    </script>
+    
     <script src="../Lab%201/gl-matrix-min.js"></script>
     <script type="text/javascript" src="../Lab%201/webgl-utils.js"></script>
     <script src="solar.js"></script>
