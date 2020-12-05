@@ -127,23 +127,24 @@ class Planet {
       // Model view matrix
       mat4.identity(mvMatrix);
       mat4.translate(mvMatrix, mvMatrix, [this.x/this.z, this.y/this.z, this.z/this.z]);
-      mat4.scale(mvMatrix, mvMatrix, new Array(3).fill(this.r/26));
+      mat4.scale(mvMatrix, mvMatrix, new Array(3).fill(this.r/30));
       gl.uniformMatrix4fv(shaderProgram.mvMatrixUniform, false, mvMatrix);
       gl.drawElements(gl.TRIANGLES, this.indices.length, gl.UNSIGNED_SHORT, 0);
     }
 }
 
-/* Deklarasi Object Planet */
-var sun = new Planet("Sun", 0.0, 0.0, 25.0, 1.0, 0.0, 255.0, 165.0, 0.0);
-var mercury = new Planet("Mercury", 0.1, -2.0, 25.0, 0.3, 0.0, 210.0, 105.0, 30.0);
-var venus = new Planet("Venus", -2.5, 2.0, 25.0, 0.3, 180.0,  255.0, 0.0, 0.0);
-var earth = new Planet("Earth", 0.0, -5.0, 25.0, 0.3, 0.0, 0.0, 0.0, 255.0);
-var moon = new Planet("Moon", 0.0, -6.0, 25.0, 0.15, 0.0, 105.0, 105.0, 105.0);
-var march = new Planet("March", -6.0, 4.0, 25.0, 0.3, 180.0, 165.0, 42.0, 42.0);
-var jupyter = new Planet("Jupyter", -8.0, 6.0, 25.0, 0.5, 180.0, 255.0, 255.0, 255.0);
-var saturnus = new Planet("Saturnus", -10.0, 5.0, 25.0, 0.4, 180.0, 255.0, 228.0 ,196.0);
-var uranus = new Planet("Uranus", 15.0, 5.0, 25.0, 0.35, 90.0, 95.0, 158.0, 160.0);
-var neptunus = new Planet("Neptunus", 0.0, -25.0, 25.0, 0.35, 0.0, 123.0, 104.0, 238.0);
+/* Deklarasi Object Planet*/
+/*                           x,   y,    z,    r, rotAngle, red, green, blue */
+var sun = new Planet("Sun", 0.0, 0.0, 25.0, 695000.0/15, 0.0, 253.0, 184.0, 19.0);
+var mercury = new Planet("Mercury", 0.1, -2.0, 25.0, 2439.7, 0.0, 219.0, 206.0, 202.0);
+var venus = new Planet("Venus", -2.5, 2.0, 25.0, 6051.8, 180.0, 248.0 , 226.0, 176.0);
+var earth = new Planet("Earth", 0.0, -5.0, 25.0, 6371.0, 0.0, 79.0 , 76.0, 176.0);
+var moon = new Planet("Moon", 0.0, -6.0, 25.0, 1737.1, 0.0, 237.0, 248.0, 252.0);
+var mars = new Planet("Mars", -6.0, 4.0, 25.0, 3389.5, 180.0, 193.0, 68.0, 14.0);
+var jupiter = new Planet("Jupiter", -8.0, 6.0, 25.0, 69911/2, 180.0, 193.0, 68.0, 14.0);
+var saturnus = new Planet("Saturnus", -10.0, 5.0, 25.0, 58232.0/2, 180.0, 227.0, 224.0, 192.0);
+var uranus = new Planet("Uranus", 15.0, 5.0, 25.0, 25362.0/2, 90.0, 147.0, 184.0, 190.0);
+var neptunus = new Planet("Neptunus", 0.0, -25.0, 25.0, 24622.0/2, 0.0, 62.0, 84.0, 232.0);
 
 /* Fungsi untuk membuat WebGL Context */
 function createGLContext(canvas) {
