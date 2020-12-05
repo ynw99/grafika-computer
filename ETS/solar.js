@@ -2,13 +2,14 @@ var gl;
 var canvas;
 var shaderProgram;
 var vertexPositionBuffer;
-var indice;
+var indexBuffer;
 var vertexColorBuffer;
 var projectionMatrix = mat4.create();
 var mvMatrix = mat4.create();
 var lastTime = 0;
 var cameraPosition = 0;
 
+/* Membuat kelas untuk membuat Planet */
 class Planet {
     constructor(planetName, x, y, z, r, rotateAngle, red, green, blue) {
         this.planetName = planetName;
@@ -21,17 +22,13 @@ class Planet {
         this.green = green;
         this.blue = blue;
         this.vertice = [];
-        this.indice = [];
+        this.indices = [];
         this.load = 0;
 
         if(this.planetName == "Moon") {
             this.rotateAngle2 = .0;
         }
-    }
-
-    
-
-    
+    }   
 }
 
 /* Fungsi untuk membuat WebGL Context */
@@ -55,21 +52,63 @@ function createGLContext(canvas) {
     return context;
   }
 
-function degToRad(degree) {
-    const radian = Math.PI/180;
-    return degree * radian;
+  /* Fungsi untuk memuat properti shader dari HTML */
+function loadShaderFromDOM(id) {
+    var shaderScript = document.getElementById(id);
+    
+    if (!shaderScript) {
+        return null;
+    }
+    
+    var shaderSource = "";
+    var currentChild = shaderScript.firstChild;
+    while (currentChild) {
+        if (currentChild.nodeType == 3) { 
+            shaderSource += currentChild.textContent;
+        }
+        currentChild = currentChild.nextSibling;
+    }
+    
+    var shader;
+    if (shaderScript.type == "x-shader/x-fragment") {
+        shader = gl.createShader(gl.FRAGMENT_SHADER);
+    } else if (shaderScript.type == "x-shader/x-vertex") {
+        shader = gl.createShader(gl.VERTEX_SHADER);
+    } else {
+        return null;
+    }
+    
+    gl.shaderSource(shader, shaderSource);
+    gl.compileShader(shader);
+    
+    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+        alert(gl.getShaderInfoLog(shader));
+        return null;
+    }
+    
+    return shader;
 }
 
+/* Fungsi untuk mengubah sudut ke radian */
+function degToRad(degree) {
+    const rad = Math.PI/180;
+    return degree * rad;
+}
+
+/* Fungsi untuk membuat proyeksi */
 function projection() {
 
 }
 
+/* Fungsi untuk membuat animasi */
 function tick() {
     requestAnimFrame(tick);
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     draw();
     animate();
 }
 
+/* Fungsi utama */
 function startup() {
     canvas = document.getElementById('myCanvas');
     gl = createGLContext(canvas);
