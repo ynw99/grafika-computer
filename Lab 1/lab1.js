@@ -29,7 +29,7 @@ function createGLContext(canvas) {
 }
 
 function degToRad(degree) {
-    var pi = Math.PI
+    var pi = Math.PI;
     return degree * (pi/180.0);
 }
 

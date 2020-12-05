@@ -7,13 +7,14 @@
     <script id="vs-src" type="x-shader/x-vertex">
         attribute vec3 aVertexPosition; // Posisi
         attribute vec4 aVertexColor; // Warna
+        uniform mat4 uProjectionMatrix; // Matrix proyeksi
         uniform mat4 uMVMatrix; // Model view matrix
         uniform vec4 translation; // Translasi
 
         varying vec4 vColor; // Variabel yang akan disambungkan ke fragment shader
         
         void main(void) {
-            gl_Position = uMVMatrix * vec4(aVertexPosition, 1.0) + translation;
+            gl_Position = uProjectionMatrix * uMVMatrix * vec4(aVertexPosition, 1.0) + translation;
             vColor = aVertexColor;
         }
     </script>
@@ -33,6 +34,8 @@
     <script src="solar.js"></script>
 
     <body onload="startup();">
+        <div>Klik untuk mengganti posisi kamera</div>
+        <div id="posisiKamera">Posisi kamera: top down (tampak atas)</div>
         <canvas id="myCanvas" width="800" height="800"></canvas>
     </body>
 </html>
