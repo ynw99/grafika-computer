@@ -5,13 +5,13 @@
     </head>
 
     <script id="vs-src" type="x-shader/x-vertex">
-        attribute vec3 aVertexPosition; // Posisi
-        attribute vec4 aVertexColor; // Warna
-        uniform mat4 uProjectionMatrix; // Matrix proyeksi
-        uniform mat4 uMVMatrix; // Model view matrix
-        uniform vec4 translation; // Translasi
+        attribute vec3 aVertexPosition;
+        attribute vec4 aVertexColor;
+        uniform mat4 uProjectionMatrix;
+        uniform mat4 uMVMatrix;
+        uniform vec4 translation;
 
-        varying vec4 vColor; // Variabel yang akan disambungkan ke fragment shader
+        varying vec4 vColor;
         
         void main(void) {
             gl_Position = uProjectionMatrix * uMVMatrix * vec4(aVertexPosition, 1.0) + translation;
@@ -29,13 +29,13 @@
         }
     </script>
     
-    <script src="../Lab%201/gl-matrix-min.js"></script>
-    <script type="text/javascript" src="../Lab%201/webgl-utils.js"></script>
+    <script src="gl-matrix-min.js"></script>
+    <script type="text/javascript" src="webgl-utils.js"></script>
     <script src="solar.js"></script>
 
     <body onload="startup();">
-        <div>Klik untuk mengganti posisi kamera</div>
-        <div id="posisiKamera">Posisi kamera: top down (tampak atas)</div>
+        <div>Klik beberapa kali untuk mengganti posisi kamera</div>
+        <div id="cameraPosition">Tampak Atas</div>
         <canvas id="myCanvas" width="800" height="800"></canvas>
     </body>
 </html>
