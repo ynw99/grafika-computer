@@ -23,11 +23,13 @@ class Planet {
         this.vertice = [];
         this.indice = [];
         this.load = 0;
+
+        if(this.planetName == "Moon") {
+            this.rotateAngle2 = .0;
+        }
     }
 
-    if(this.planetName == "Moon") {
-        this.rotateAngle2 = .0;
-    }
+    
 
     
 }
@@ -56,6 +58,16 @@ function createGLContext(canvas) {
 function degToRad(degree) {
     const radian = Math.PI/180;
     return degree * radian;
+}
+
+function projection() {
+
+}
+
+function tick() {
+    requestAnimFrame(tick);
+    draw();
+    animate();
 }
 
 function startup() {
