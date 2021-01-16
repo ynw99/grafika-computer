@@ -1,20 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE HTML>
+<html>
     <head>
-        <title>Tugas Shading EAS</title>
+        <title>Animasi Sederhana</title>
+        <meta charset="utf-8" />
     </head>
 
     <script id="vs-src" type="x-shader/x-vertex">
-        attribute vec3 aVertexPosition;
-        attribute vec4 aVertexColor;
-        uniform mat4 uProjectionMatrix;
-        uniform mat4 uMVMatrix;
-        uniform vec4 translation;
-
-        varying vec4 vColor;
+        attribute vec3 aVertexPosition; // Posisi
+        attribute vec4 aVertexColor; // Warna
+        uniform mat4 uMVMatrix; // Model view matrix
+        
+        varying vec4 vColor; // Variabel yang akan disambungkan ke fragment shader
         
         void main(void) {
-            gl_Position = uProjectionMatrix * uMVMatrix * vec4(aVertexPosition, 1.0) + translation;
+            gl_Position = uMVMatrix*vec4(aVertexPosition, 1.0);
             vColor = aVertexColor;
         }
     </script>
@@ -28,22 +27,12 @@
             gl_FragColor = vColor;
         }
     </script>
-    
+
     <script src="gl-matrix-min.js"></script>
     <script type="text/javascript" src="webgl-utils.js"></script>
-    <script src="solar.js"></script>
+    <script src="lab1.js"></script>
 
     <body onload="startup();">
-        <div>Klik beberapa kali untuk mengganti posisi kamera</div>
-        <a href="https://github.com/ynw99/grafika-computer/tree/main/ETS">SOURCE CODE KLIK DI SINI</a>
-        <div id="cameraPosition">Tampak Atas</div>
-        <canvas id="myCanvas" width="800" height="800"></canvas>
-        <p>Implementasi dari program:</p>
-        <ol>
-            <li>Membuat kelas yang akan digunakan matahari dan planet-planet.</li>
-            <li>Membuat instance objek planet</li>
-            <li>Menggambar tiap frame dari objek-objek planet</li>
-            <li>Melakukan rotasi dan translasi tiap objek planet</li>
-        </ol>
+        <canvas id="myCanvas" width="500" height="500"></canvas>
     </body>
 </html>
