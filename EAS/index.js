@@ -115,7 +115,7 @@ function initCamera(gl) {
     fieldOfView: 45.0 * Math.PI / 180.0,
     aspect: gl.canvas.clientWidth / gl.canvas.clientHeight,
     zNear: 0.1,
-    zFar: 1000000000000.0,
+    zFar: 1000.0,
     distance: 10.0,
     tilt: 45.0,
     getProjectionMatrix: function() {
