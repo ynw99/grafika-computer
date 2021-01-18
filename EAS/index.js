@@ -110,7 +110,7 @@ function initProgramInfo(gl) {
     };
 }
 
-function initCamera(gl) {
+function Camera(gl) {
   return {
     fieldOfView: 45.0 * Math.PI / 180.0,
     aspect: gl.canvas.clientWidth / gl.canvas.clientHeight,
@@ -131,7 +131,7 @@ function initCamera(gl) {
   }
 }
 
-function initLight() {
+function Light() {
   return {
     ambient: [ 0.1, 0.1, 0.1, 1.0 ],
     diffuse: [ 0.8, 0.8, 0.8, 1.0 ],
@@ -260,13 +260,13 @@ function initBuffers(gl) {
     };
 }
 
-function initModels(gl) {
+function createModels (gl) {
   const cubicModel = {
     buffers: initBuffers(gl),
     rotation: { x: 0.0, y: 0.0, z: 0.0, },
     material: {
-      ambient: [ 1.0, 0.4, 0.0, 1.0 ],
-      diffuse: [ 1.0, 0.8, 0.0, 1.0 ],
+      ambient: [ 1.0, 0.1, 0.5, 1.0 ],
+      diffuse: [ 1.0, 0.2, 0.0, 1.0 ],
       specular: [ 1.0, 1.0, 1.0, 1.0 ],
       shininess: 100.0,
     },
@@ -367,11 +367,11 @@ function main() {
     return;
   }
 
-  const camera = initCamera(gl);
+  const camera = Camera(gl);
 
-  const light = initLight();
+  const light = Light();
 
-  const models = initModels(gl);
+  const models = createModels(gl);
 
   let spacePressed = false;
   let leftPressed = false;
