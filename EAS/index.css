@@ -1,0 +1,14 @@
+#div1 {
+    width: 100%;
+    text-align: center;
+  }
+#div2 {
+    width: 100%;
+    text-align: center;
+  }
+canvas{
+    position: absolute;
+    top: 35%;
+    left: 50%;
+    transform: translate(-50%, -50%);               
+}

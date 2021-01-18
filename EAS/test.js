@@ -141,7 +141,7 @@ function Light() {
     getPosition: function() {
       const rotation = mat4.create();
       mat4.rotate(rotation, rotation,
-          this.position * Math.PI / 180.0, [ 0.0, 1.0, 0.0 ]);
+          this.position * Math.PI / 180.0, [ 1.0, 1.0, 0.0 ]);
 
       const position = vec4.fromValues(0.0, 0.0, -this.distance, 1.0);
       vec4.transformMat4(position, position, rotation);
@@ -252,54 +252,48 @@ function initBuffers(gl) {
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices), gl.STATIC_DRAW);
 
-    return {
-      position: positionBuffer,
-      normal: normalBuffer,
-      indices: indexBuffer,
-      count: 36,
-    };
-}
-
-function createModels (gl) {
-  const cubicModel = {
-    buffers: initBuffers(gl),
-    rotation: { x: 0.0, y: 0.0, z: 0.0, },
-    material: {
-      ambient: [ 1.0, 0.1, 0.5, 1.0 ],
-      diffuse: [ 1.0, 0.2, 0.0, 1.0 ],
-      specular: [ 1.0, 1.0, 1.0, 1.0 ],
-      shininess: 100.0,
-    },
-  };
-
-  const models = [
-    cubicModel,
-  ]
-
-  models.forEach(model => {
-    model.getModelViewMatrix = function() {
-      const modelViewMatrix = mat4.create();
-
-      mat4.rotate(modelViewMatrix, modelViewMatrix,
-          this.rotation.x * Math.PI / 180.0, [ 1.0, 0.0, 0.0 ]);
-      mat4.rotate(modelViewMatrix, modelViewMatrix,
-          this.rotation.y * Math.PI / 180.0, [ 0.0, 1.0, 0.0 ]);
-      mat4.rotate(modelViewMatrix, modelViewMatrix,
-          this.rotation.z * Math.PI / 180.0, [ 0.0, 0.0, 1.0 ]);
-
-      return modelViewMatrix;
-    };
-
-    model.getNormalMatrix = function() {
-      const normalMatrix = mat4.create();
-      mat4.invert(normalMatrix, this.getModelViewMatrix());
-      mat4.transpose(normalMatrix, normalMatrix);
-
-      return normalMatrix;
-    };
-  });
-
-  return models;
+    const cubicModel = {
+        buffers: {  position: positionBuffer,
+                    normal: normalBuffer,
+                    indices: indexBuffer,
+                    count: 36 },
+        rotation: { x: 0.0, y: 0.0, z: 0.0, },
+        material: {
+          ambient: [ 1.0, 0.1, 0.5, 1.0 ],
+          diffuse: [ 1.0, 0.2, 0.0, 1.0 ],
+          specular: [ 1.0, 1.0, 1.0, 1.0 ],
+          shininess: 100.0,
+        },
+      };
+    
+      const models = [
+        cubicModel,
+      ]
+    
+      models.forEach(model => {
+        model.getModelViewMatrix = function() {
+          const modelViewMatrix = mat4.create();
+    
+          mat4.rotate(modelViewMatrix, modelViewMatrix,
+              this.rotation.x * Math.PI / 180.0, [ 1.0, 0.0, 0.0 ]);
+          mat4.rotate(modelViewMatrix, modelViewMatrix,
+              this.rotation.y * Math.PI / 180.0, [ 0.0, 1.0, 0.0 ]);
+          mat4.rotate(modelViewMatrix, modelViewMatrix,
+              this.rotation.z * Math.PI / 180.0, [ 0.0, 0.0, 1.0 ]);
+    
+          return modelViewMatrix;
+        };
+    
+        model.getNormalMatrix = function() {
+          const normalMatrix = mat4.create();
+          mat4.invert(normalMatrix, this.getModelViewMatrix());
+          mat4.transpose(normalMatrix, normalMatrix);
+    
+          return normalMatrix;
+        };
+      });
+    
+      return models;
 }
 
 function drawModel(gl, programInfo, model) {
@@ -371,7 +365,7 @@ function main() {
 
   const light = Light();
 
-  const models = createModels(gl);
+  const models = initBuffers(gl);
 
   let spacePressed = false;
   let leftPressed = false;
@@ -401,11 +395,11 @@ function main() {
       const elapsed = now - then;
 
       if (leftPressed) {
-        light.position -= elapsed * 100.0;
+        light.position -= elapsed * 200.0;
       }
 
       if (rightPressed) {
-        light.position += elapsed * 100.0;
+        light.position += elapsed * 200.0;
       }
 
       if (!spacePressed) {
